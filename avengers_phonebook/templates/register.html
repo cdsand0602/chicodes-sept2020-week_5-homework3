@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1 class="justify-content-center">Enter your information in the Avengers Phonebook</h1>
+    <div class="justify-content-center">
+        <form method="POST">
+            {{ user_form.hidden_tag() }}
+            <div class="form-group">
+                <fieldset>
+                    {{ user_form.name.label }}
+                    {{ user_form.name(class="form-control", placeholder = "Add Name")}}
+                </fieldset>
+
+                <fieldset>
+                    {{ user_form.phone.label }}
+                    {{ user_form.phone(class="form-control", placeholder = "Enter phone number")}}   
+                </fieldset>
+
+                <fieldset>
+                    {{ user_form.email.label }}
+                    {{ user_form.email(class="form-control", placeholder = "Add Email")}}              
+                </fieldset>
+
+                <fieldset>
+                    {{ user_form.password.label }}
+                    {{ user_form.password(class="form-control", placeholder = "Enter your password")}}
+                </fieldset>
+                {{ user_form.submit(class = "btn btn-success")}}
+            </div>
+        </form>
+    </div>
+
+{% endblock content %}
