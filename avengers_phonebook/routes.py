@@ -5,7 +5,7 @@ from avengers_phonebook import app, db
 from flask import render_template,request, redirect, url_for
 
 # Import Our Forms(s)
-from avengers_phonebook.forms import UserInfoForm, LoginForm
+from avengers_phonebook.forms import UserInfoForm, LoginForm, PhoneForm
 
 # Import of our models for the database
 from avengers_phonebook.models import User, Post, check_password_hash
@@ -66,3 +66,62 @@ def login():
         else:
             return redirect(url_for('login'))
     return render_template('login.html', login_form = form)
+
+#app.route('/logout')
+#@login_required
+#def logout():
+#    logout_user()
+#    return redirect(url_for('home'))
+
+# Creation of phone route
+@app.route('/phone', methods = ['GET', 'POST'])
+@login_required
+def phone():
+    form = PhoneForm()
+    if request.method == 'POST' and form.validate():
+        title = form.title.data
+        content = form.content.data
+        user_id = current_user.id
+        phone = Phone(title,content,user_id)
+
+        db.session.add(phone)
+
+        db.session.commit()
+        return redirect(url_for('home'))
+    return render_template('phone.html', phone_form = form)
+
+# phone detail route to display phone number
+@app.route('/phone/<int:phone_id>')
+@login_required
+def phone_detail(phone_id):
+    phone = Phone.query.get_or_404(phone_id)
+    return render_template('phone_detail.html', phone = phone)
+
+@app.route('/phone/update/<int:phone_id>',methods = ['GET','POST'])
+@login_required
+def phone_update(phone_id):
+    phone = Phone.query.get_or_404(phone_id)
+    form = PhoneForm()
+
+    if request.method == 'POST' and form.validate():
+        title = form.title.data
+        content = form.content.data
+        user_id = current_user.id
+
+        # Update the Database with new Info
+        phone.title = title
+        phone.content = content
+        phone.user_id = user_id
+
+        # Commit the changes to the database
+        db.session.commit()
+        return redirect(url_for('home'))
+    return render_template('phone_update.html', update_form = form)
+
+@app.route('/phone/delete/<int:phone_id>', methods = ['GET','POST','DELETE'])
+@login_required
+def phone_delete(phone_id):
+    phone = Phone.query.get_or_404(post_id)
+    db.session.delete(phone)
+    db.session.commit()
+    return redirect(url_for('home'))

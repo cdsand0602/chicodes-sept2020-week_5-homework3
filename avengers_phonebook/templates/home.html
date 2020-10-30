@@ -1,5 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Hello World</h1>
+   
+    <h1>Hello there {{ current_user.username }}</h1>
+    {% if current_user.is_authenticated %}
+        {% for phone in user_phone %}
+            <div class="container">
+                <h3>
+                    <a href="{{ url_for('phone_detail', phone_id = phone.id) }}">{{ phone.title }}</a>
+                </h3>
+                <p>{{ phone.content }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+    <h2>Avengers Phonebook...</h2>
+
+    {% endif %}
 {% endblock content %}
